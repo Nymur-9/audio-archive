@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Audiobook Archive</title>
   <style>
     body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0; }
@@ -15,6 +15,30 @@
     .card { background: #fff; margin: 1rem; padding: 1rem; width: 300px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
     .card h3 { margin-top: 0; }
     .hidden { display: none; }
+
+    .admin-panel {
+      background: #eee;
+      padding: 1rem;
+      margin: 2rem auto;
+      max-width: 600px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    .admin-panel input, .admin-panel select {
+      margin: 0.3rem 0;
+      padding: 0.5rem;
+      width: 100%;
+    }
+
+    .admin-panel button {
+      padding: 0.5rem 1rem;
+      margin-top: 0.5rem;
+      background: #333;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -33,64 +57,42 @@
     <button onclick="filterCategory('Religion')">Religion</button>
   </div>
 
+  <!-- Admin Panel: Only visible to you locally -->
+  <div class="admin-panel">
+    <h2>Add New Audiobook</h2>
+    <input type="text" id="newTitle" placeholder="Title">
+    <input type="text" id="newAuthor" placeholder="Author">
+    <select id="newCategory">
+      <option value="Fiction">Fiction</option>
+      <option value="Science">Science</option>
+      <option value="Religion">Religion</option>
+    </select>
+    <input type="file" id="newAudio">
+    <input type="text" id="newDuration" placeholder="Duration (e.g. 15:34)">
+    <button onclick="addAudiobook()">Add Audiobook</button>
+  </div>
+
   <div class="container" id="audiobookList">
-    <!-- Fiction: The Time Machine -->
+    <!-- SoundCloud Example -->
     <div class="card" data-category="Fiction">
       <h3>The Time Machine</h3>
       <p>by H.G. Wells</p>
-
-      <!-- Dropdown to choose chapter -->
-      <select id="chapterSelector1">
-        <option value="chapter1">Chapter 1</option>
-        <option value="chapter2">Chapter 2</option>
-        <option value="chapter3">Chapter 3</option>
-      </select>
-
-      <!-- Audio Player -->
-      <iframe id="audioPlayer1" width="100%" height="60" scrolling="no" frameborder="no" allow="autoplay"
-        src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/123456789&color=%23333&auto_play=false">
-      </iframe>
+      <iframe width="100%" height="60" scrolling="no" frameborder="no" allow="autoplay"
+        src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/yourusername/the-time-machine&color=%23333&auto_play=false"></iframe>
     </div>
 
-    <!-- Science: Brief History of Time -->
+    <!-- Archive.org Example -->
     <div class="card" data-category="Science">
       <h3>Brief History of Time</h3>
       <p>by Stephen Hawking</p>
-
-      <!-- Dropdown to choose chapter -->
-      <select id="chapterSelector2">
-        <option value="chapter1">Chapter 1</option>
-        <option value="chapter2">Chapter 2</option>
-        <option value="chapter3">Chapter 3</option>
-      </select>
-
-      <!-- Audio Player -->
-      <iframe id="audioPlayer2" width="100%" height="60" scrolling="no" frameborder="no" allow="autoplay"
-        src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/987654321&color=%23333&auto_play=false">
-      </iframe>
-    </div>
-
-    <!-- Religion: The Bhagavad Gita -->
-    <div class="card" data-category="Religion">
-      <h3>The Bhagavad Gita</h3>
-      <p>Hindu scripture</p>
-
-      <!-- Dropdown to choose chapter -->
-      <select id="chapterSelector3">
-        <option value="chapter1">Chapter 1</option>
-        <option value="chapter2">Chapter 2</option>
-        <option value="chapter3">Chapter 3</option>
-      </select>
-
-      <!-- Audio Player -->
-      <iframe id="audioPlayer3" width="100%" height="60" scrolling="no" frameborder="no" allow="autoplay"
-        src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/192837465&color=%23333&auto_play=false">
-      </iframe>
+      <audio controls style="width: 100%;">
+        <source src="https://archive.org/download/your-audio/time-chapter1.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
     </div>
   </div>
 
   <script>
-    // Function to filter books by category
     function filterCategory(category) {
       const cards = document.querySelectorAll('.card');
       cards.forEach(card => {
@@ -99,7 +101,6 @@
       });
     }
 
-    // Search functionality
     document.getElementById('searchInput').addEventListener('input', function() {
       const value = this.value.toLowerCase();
       const cards = document.querySelectorAll('.card');
@@ -109,53 +110,43 @@
       });
     });
 
-    // Function to change the audio track based on selected chapter (The Time Machine)
-    document.getElementById("chapterSelector1").addEventListener("change", function() {
-      var chapter = this.value;
-      var iframe = document.getElementById("audioPlayer1");
+    function addAudiobook() {
+      const title = document.getElementById('newTitle').value;
+      const author = document.getElementById('newAuthor').value;
+      const category = document.getElementById('newCategory').value;
+      const duration = document.getElementById('newDuration').value;
+      const fileInput = document.getElementById('newAudio');
 
-      var newSrc = "";
-      if (chapter === "chapter1") {
-        newSrc = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/123456789&color=%23333&auto_play=false";
-      } else if (chapter === "chapter2") {
-        newSrc = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/987654321&color=%23333&auto_play=false";
-      } else if (chapter === "chapter3") {
-        newSrc = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/112233445&color=%23333&auto_play=false";
+      if (!title || !author || !fileInput.files[0]) {
+        alert('Please fill in all fields and select a file.');
+        return;
       }
-      iframe.src = newSrc;
-    });
 
-    // Function to change the audio track based on selected chapter (Brief History of Time)
-    document.getElementById("chapterSelector2").addEventListener("change", function() {
-      var chapter = this.value;
-      var iframe = document.getElementById("audioPlayer2");
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const audioURL = e.target.result;
+        const container = document.getElementById('audiobookList');
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.setAttribute('data-category', category);
+        card.innerHTML = `
+          <h3>${title}</h3>
+          <p>by ${author} (${duration})</p>
+          <audio controls style="width: 100%;">
+            <source src="${audioURL}" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+        `;
+        container.appendChild(card);
+      };
+      reader.readAsDataURL(fileInput.files[0]);
 
-      var newSrc = "";
-      if (chapter === "chapter1") {
-        newSrc = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/987654321&color=%23333&auto_play=false";
-      } else if (chapter === "chapter2") {
-        newSrc = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/223344556&color=%23333&auto_play=false";
-      } else if (chapter === "chapter3") {
-        newSrc = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/334455667&color=%23333&auto_play=false";
-      }
-      iframe.src = newSrc;
-    });
-
-    // Function to change the audio track based on selected chapter (The Bhagavad Gita)
-    document.getElementById("chapterSelector3").addEventListener("change", function() {
-      var chapter = this.value;
-      var iframe = document.getElementById("audioPlayer3");
-
-      var newSrc = "";
-      if (chapter === "chapter1") {
-        newSrc = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/192837465&color=%23333&auto_play=false";
-      } else if (chapter === "chapter2") {
-        newSrc = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/445566778&color=%23333&auto_play=false";
-      } else if (chapter === "chapter3") {
-        newSrc = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/556677889&color=%23333&auto_play=false";
-      }
-      iframe.src = newSrc;
-    });
+      // Clear form
+      document.getElementById('newTitle').value = '';
+      document.getElementById('newAuthor').value = '';
+      document.getElementById('newDuration').value = '';
+      document.getElementById('newAudio').value = '';
+    }
   </script>
 </body>
 </html>
